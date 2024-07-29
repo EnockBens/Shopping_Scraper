@@ -121,16 +121,7 @@ Contributions are welcome! Please follow these steps to contribute:
 - Push to the branch (git push origin feature-branch).
 - Create a new Pull Request.
 
-## License
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/yourusername/shopping_scraper/blob/master/LICENSE) file for details.
 
-## Contact
-
-For any questions or feedback, please contact:
-
-- Your Name
-- Your Email
-- Your GitHub Profile
 ```
 
