@@ -5,15 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Search</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('static/Baground1.avif'); /* Replace with your background image URL */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #fff;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 10px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .form-control {
+            border: 2px solid #fff;
+            background: transparent;
+            color: #fff;
+        }
+        .form-control::placeholder {
+            color: #ccc;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            font-weight: bold;
+            padding: 10px 20px;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Search for Products</h1>
+        <h1 class="mb-4 text-center">Search for Products</h1>
         <form action="{{ url_for('search') }}" method="post">
             <div class="form-group">
                 <input type="text" class="form-control" name="query" placeholder="Enter product name" required>
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-primary btn-block">Search</button>
         </form>
     </div>
 </body>

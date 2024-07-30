@@ -5,34 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('static/Baground2.webp');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .product-card {
+            width: 250px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .product-card img {
+            width: 100%;
+            height: auto;
+            max-height: 150px;
+            object-fit: cover;
+        }
+        .product-card-content {
+            padding: 15px;
+            text-align: center;
+        }
+        .product-card-content h5 {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .product-card-content p {
+            margin: 5px 0;
+        }
+        .product-card-content .btn {
+            margin-top: 10px;
+            width: 100%;
+        }
+        .products-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .container {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Search Results</h1>
+        <div class="dropdown mb-4">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Sort by Price
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#" onclick="sortProducts('asc')">Cheapest First</a>
+                <a class="dropdown-item" href="#" onclick="sortProducts('desc')">Most Expensive </a>
+            </div>
+        </div>
         {% if results %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Source</th>
-                    <th>Buy</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for result in results %}
-                <tr>
-                    <td>{{ result['name'] }}</td>
-                    <td>{{ result['price'] }}</td>
-                    <td>{{ result['source'] }}</td>
-                    <td><a href="{{ result['url'] }}" class="btn btn-success">Buy</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="products-grid" id="productsGrid">
+            {% for result in results %}
+            <div class="product-card" data-price="{{ result['price'] }}">
+                <img src="{{ result['image_url'] }}" alt="{{ result['name'] }}">
+                <div class="product-card-content">
+                    <h5>{{ result['name'] }}</h5>
+                    <p><strong>Price: </strong>{{ result['price'] }}</p>
+                    <p><strong>Source: </strong>{{ result['source'] }}</p>
+                    <a href="{{ result['url'] }}" class="btn btn-success" target="_blank">Buy</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
         {% else %}
         <p>No results found</p>
         {% endif %}
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        function sortProducts(order) {
+            let products = Array.from(document.querySelectorAll('.product-card'));
+            products.sort((a, b) => {
+                let priceA = parseFloat(a.getAttribute('data-price').replace(/[^0-9.-]+/g,""));
+                let priceB = parseFloat(b.getAttribute('data-price').replace(/[^0-9.-]+/g,""));
+                return order === 'asc' ? priceA - priceB : priceB - priceA;
+            });
+            let productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = '';
+            products.forEach(product => productsGrid.appendChild(product));
+        }
+    </script>
 </body>
 </html>

@@ -1,19 +1,20 @@
-# Import necessary modules from Flask
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
+import os
+import re
 
+# Load environment variables from .env file
+load_dotenv()
 
 # Import the scraping functions from your scraper package
-from scraper import scrape_killimall, scrape_jiji, scrape_amazon
-
-# Import your configuration settings
-import config
+from scraper import scrape_kilimall, scrape_jiji, scrape_amazon, scrape_jumia
 
 # Initialize the Flask application
 app = Flask(__name__)
 
 # Configure the SQLAlchemy part of the app instance
-app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URI
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Create an SQLAlchemy object and bind it to the app
@@ -46,13 +47,16 @@ def index():
 @app.route('/search', methods=['POST'])
 def search():
     query = request.form['query']  # Get the query from the form
-    killimall_results = scrape_killimall(query)  # Get results from Killimall
+    kilimall_results = scrape_kilimall(query)  # Get results from Kilimall
     jiji_results = scrape_jiji(query)  # Get results from Jiji
     amazon_results = scrape_amazon(query)  # Get results from Amazon
-    results = killimall_results + jiji_results + amazon_results  # Combine the results
+    jumia_results = scrape_jumia(query)  # Get results from Jumia
     
-    # Debug: Print the results to the console
-    print(results)
+    results = kilimall_results + jiji_results + amazon_results + jumia_results  # Combine the results
+    
+    # Convert prices to float for sorting
+    for result in results:
+        result['price'] = re.sub(r'[^\d.]', '', result['price'])
     
     return render_template('results.html', results=results)  # Render the results page
 
@@ -64,7 +68,4 @@ def buy(product_id):
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(port= 5006 ,debug=True)
-
-
-
+    app.run(port=5006, debug=True)
