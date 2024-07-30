@@ -7,10 +7,11 @@ def scrape_jiji(query):
     soup = BeautifulSoup(response.text, 'html.parser')
 
     products = []
-    for item in soup.select('.product-item'):
-        name = item.select_one('.product-title').text.strip()
-        url = item.select_one('a')['href']
-        price = item.select_one('.product-price').text.strip()
+    for item in soup.select('.masonry-item'):
+        name = item.select_one('.b-list-advert-base__data__header').text.strip()
+        relative_url = item.select_one('a')['href']
+        url = f'https://www.jiji.co.ke{relative_url}'
+        price = item.select_one('.qa-advert-price').text.strip()
         products.append({
             'name': name,
             'url': url,
