@@ -3,7 +3,11 @@ from bs4 import BeautifulSoup
 
 def scrape_jiji(query):
     search_url = f'https://www.jiji.co.ke/search?query={query}'
-    response = requests.get(search_url)
+    proxies = {
+        "http": None,
+        "https": None,
+    }
+    response = requests.get(search_url, proxies=proxies)
     soup = BeautifulSoup(response.text, 'html.parser')
 
     products = []
